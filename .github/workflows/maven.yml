@@ -43,6 +43,6 @@ jobs:
       with:
         image: sachinigamage/docker-springboot
         registry: docker.io
-        username: ${{ secrets.actions.DOCKER_USERNAME }}
-        password: ${{ secrets.actions.DOCKER_PASSWORD }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
