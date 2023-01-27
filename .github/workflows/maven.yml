@@ -39,6 +39,14 @@ jobs:
     - name: Create a network for the DB
       run: docker network create my-network
 
+    - name: Run MySQL container
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      run: |
+        docker run -d -p 3307:3306 --name mysqldb -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
+        docker network connect spring-net mysqldb 
+        docker logs mysqldb 
+
     - name: Build with Maven
       run: mvn clean install -e -X
 
