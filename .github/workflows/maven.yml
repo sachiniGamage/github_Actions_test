@@ -40,6 +40,8 @@ jobs:
       run: docker network create my-network
 
     - name: Run MySQL container
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       run: |
         docker run -d --name mysqldb --network my-network -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
 
