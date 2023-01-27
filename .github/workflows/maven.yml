@@ -43,14 +43,15 @@ jobs:
       env:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       run: |
-        docker run -d --name mysqldb --network my-network -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
-
-    - name: Build with Maven
-      run: mvn clean install -e -X
+        docker run -p 3307:3306 --name mysqldb -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
+        docker network connect spring-net mysqldb
 
     - name: Run Spring Boot application
       run: |
         docker run --network my-network -p 9082:8082 -t sachi9/docker-springboot2:main-${{ env.SHA }}
+
+    - name: Build with Maven
+      run: mvn clean install -e -X
 
     - name: Stop MySQL container
       run: |
