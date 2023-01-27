@@ -39,7 +39,7 @@ jobs:
       run: mvn clean install -DskipTests
 
     - name: Build and Push Docker Image
-      run: |
+      run:
         docker build -f Dockerfile -t docker.io/sachinigamage/docker-springboot3:main-${{ env.GITHUB_SHA }} .
         docker push docker.io/sachinigamage/docker-springboot-springboot:main-${{ env.GITHUB_SHA }}
       
