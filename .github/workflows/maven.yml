@@ -61,7 +61,7 @@ jobs:
 
             
     - name: Copy Docker Image to EC2 instance
-      run: aws s3 cp s3://$BUCKET_NAME/$DOCKER_IMAGE .
+      run: aws s3 cp s3://$BUCKET_NAME/$DOCKER_IMAGE . --debug
 
     - name: Connect to EC2 instance
       run: ssh -i $PRIVATE_KEY_FILE $USERNAME_HOST
