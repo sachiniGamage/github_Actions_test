@@ -66,7 +66,7 @@ jobs:
           aws configure set region ${{ secrets.REGION }}
 
     - name: Copy Docker Image to EC2 instance
-      run: aws s3 cp s3://${{ secrets.BUCKET_NAME }}/${{ secrets.DOCKER_IMAGE }} . --debug
+      run: aws s3 cp sachi9/docker-springboot2:main- s3://${{ secrets.BUCKET_NAME }}/docker-springboot2.tar.gz . --debug
 
     - name: Connect to EC2 instance
       run: ssh -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME_HOST }}
