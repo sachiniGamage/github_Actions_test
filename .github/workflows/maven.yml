@@ -73,7 +73,9 @@ jobs:
         aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
 
     - name: Connect to EC2 instance
-      run: ssh -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME_HOST }}
+      run:
+          aws ec2 describe-instances --instance-ids i-05cd4fe01c7bc13fe --query 'Reservations[].Instances[].[InstanceId,InstanceType,PublicIpAddress]' --output text
+
 
     - name: Stop and remove existing containers
       run: |
