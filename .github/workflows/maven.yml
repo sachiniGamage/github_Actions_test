@@ -74,8 +74,7 @@ jobs:
 
     - name: Connect to EC2 instance
       run:
-          aws ec2 describe-instances --instance-ids i-05cd4fe01c7bc13fe --query 'Reservations[].Instances[].[InstanceId,InstanceType,PublicIpAddress]' --output text
-
+        Enter-PSSession -ComputerName ${{ secrets.IP }} -Credential ${{ secrets.CREDENTIAL }}
 
     - name: Stop and remove existing containers
       run: |
