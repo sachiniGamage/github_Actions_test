@@ -59,7 +59,7 @@ jobs:
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
           docker save sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }} > image.tar
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
-          aws s3 cp image.tar s3://my-bucket/image.tar
+          aws s3 cp image.tar s3://${{ secrets.BUCKET_NAME }}/image.tar
 
     - name: Configure AWS CLI
       run: |
