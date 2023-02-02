@@ -57,7 +57,7 @@ jobs:
       run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
-          docker save sachi9/docker-springboot2 > image.tar
+          docker save sachi9/docker-springboot2:main-${{ env.SHA }} > image.tar
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
           aws s3 cp image.tar s3://${{ secrets.BUCKET_NAME }}/image.tar
 
