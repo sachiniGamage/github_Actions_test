@@ -71,8 +71,8 @@ jobs:
           docker rm $(docker ps -a -q)
 
     - name: Load Docker Image
-      run: docker load -i $DOCKER_IMAGE
+      run: docker load -i ${{ secrets.DOCKER_IMAGE }}
 
     - name: Run Docker Container
-      run: docker run -d -p 9092:8081 $DOCKER_IMAGE
+      run: docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
