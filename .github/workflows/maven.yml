@@ -59,6 +59,7 @@ jobs:
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
 
+
     - name: Copy Docker Image to EC2 instance
       env:
         BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
