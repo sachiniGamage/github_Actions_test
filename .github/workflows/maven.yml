@@ -59,18 +59,11 @@ jobs:
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
 
-
     - name: Copy Docker Image to EC2 instance
-      env:
-        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-        DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
-      run: aws s3 cp s3://$BUCKET_NAME/$DOCKER_IMAGE .
+      run: aws s3 cp s3://${{ secrets.BUCKET_NAME }}/${{ secrets.DOCKER_IMAGE }} .
 
     - name: Connect to EC2 instance
-      env:
-        PRIVATE_KEY_FILE: ${{ secrets.$PRIVATE_KEY_FILE }}
-        USERNAME_HOST: ${{ secrets.USERNAME_HOST }}
-      run: ssh -i $PRIVATE_KEY_FILE $USERNAME_HOST
+      run: ssh -i ${{ secrets.$PRIVATE_KEY_FILE }} ${{ secrets.USERNAME_HOST }}
 
     - name: Stop and remove existing containers
       run: |
@@ -78,12 +71,8 @@ jobs:
           docker rm $(docker ps -a -q)
 
     - name: Load Docker Image
-      env:
-        $DOCKER_IMAGE: ${{ secrets.$DOCKER_IMAGE }}
-      run: docker load -i $DOCKER_IMAGE
+      run: docker load -i ${{ secrets.$DOCKER_IMAGE }}
 
     - name: Run Docker Container
-      env:
-        $DOCKER_IMAGE: ${{ secrets.$DOCKER_IMAGE }}
-      run: docker run -d -p 9092:8081 $DOCKER_IMAGE
+      run: docker run -d -p 9092:8081 ${{ secrets.$DOCKER_IMAGE }}
 
