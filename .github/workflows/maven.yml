@@ -58,5 +58,27 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
-      
+
+    - name: Configure AWS CLI
+      run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region $REGION
+            
+    - name: Copy Docker Image to EC2 instance
+      run: aws s3 cp s3://$BUCKET_NAME/$DOCKER_IMAGE .
+
+    - name: Connect to EC2 instance
+      run: ssh -i $PRIVATE_KEY_FILE $USERNAME_HOST
+
+    - name: Stop and remove existing containers
+      run: |
+          docker stop $(docker ps -a -q)
+          docker rm $(docker ps -a -q)
+
+    - name: Load Docker Image
+      run: docker load $DOCKER_IMAGE
+
+    - name: Run Docker Container
+      run: docker run -d -p 9092:8081 $DOCKER_IMAGE
 
