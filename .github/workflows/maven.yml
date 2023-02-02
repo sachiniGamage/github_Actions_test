@@ -60,7 +60,7 @@ jobs:
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
 
     - name: Copy Docker Image to EC2 instance
-      run: aws s3 cp s3://$BUCKET_NAME/$DOCKER_IMAGE .
+      run: aws s3 cp s3://${{ secrets.BUCKET_NAME }}/$DOCKER_IMAGE .
 
     - name: Connect to EC2 instance
       run: ssh -i $PRIVATE_KEY_FILE $USERNAME_HOST
