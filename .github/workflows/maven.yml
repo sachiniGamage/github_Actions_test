@@ -73,8 +73,14 @@ jobs:
         aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
 
     - name: Connect to EC2 instance
-      run:
-        Enter-PSSession -ComputerName ${{ secrets.IP }} -Credential ${{ secrets.CREDENTIAL }}
+      uses: actions/ssh-action@0.2.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY_FILE }}
+        script: |
+          echo "Connected to EC2 instance"
+      
 
     - name: Stop and remove existing containers
       run: |
