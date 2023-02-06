@@ -72,7 +72,7 @@ jobs:
 #          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -80,7 +80,8 @@ jobs:
         use_insecure_cipher: true
         debug: true
         script: |
-          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }} 
+          echo "successfull"
+#          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
 
 #    - name: Copy Docker Image to EC2 instance
