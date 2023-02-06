@@ -66,18 +66,20 @@ jobs:
 #          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #          aws configure set region ${{ secrets.REGION }}
 
-#    - name: Connect to EC2 instance
-#      run:
-#        ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
-
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY_FILE }}
-        script: |
+    - name: Connect to EC2 instance
+      run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
           docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
+
+#    - name: executing remote ssh commands using password
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.HOST }}
+#        username: ${{ secrets.USERNAME }}
+#        key: ${{ secrets.PRIVATE_KEY_FILE }}
+#        script: |
+#          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
+
 
 #    - name: Copy Docker Image to EC2 instance
 #      run: |
