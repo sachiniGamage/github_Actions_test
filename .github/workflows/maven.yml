@@ -77,8 +77,10 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY_FILE }}
+        use_insecure_cipher: true
+        debug: true
         script: |
-          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
+          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }} 
 
 
 #    - name: Copy Docker Image to EC2 instance
