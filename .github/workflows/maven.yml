@@ -73,7 +73,7 @@ jobs:
         aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
 
     - name: Connect to EC2 instance
-      uses: libc/actions/ssh@v1
+      uses: appleboy/ssh-action
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
