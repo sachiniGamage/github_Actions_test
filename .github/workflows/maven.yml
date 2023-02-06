@@ -57,26 +57,33 @@ jobs:
       run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
-          docker save sachi9/docker-springboot2:main- > image.tar
           docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
           
 
-    - name: Configure AWS CLI
-      run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region ${{ secrets.REGION }}
+#    - name: Configure AWS CLI
+#      run: |
+#          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws configure set region ${{ secrets.REGION }}
 
-    - name: Connect to EC2 instance
-      run:
-        ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+#    - name: Connect to EC2 instance
+#      run:
+#        ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY_FILE }}
+        script: |
+          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
-    - name: Copy Docker Image to EC2 instance
-      run: |
-        aws s3 cp image.tar s3://${{ secrets.BUCKET_NAME }}/image.tar --debug
-        aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
-
-    - name: Run Docker Container
-      run: docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
+#    - name: Copy Docker Image to EC2 instance
+#      run: |
+#        aws s3 cp image.tar s3://${{ secrets.BUCKET_NAME }}/image.tar --debug
+#        aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
+#
+#    - name: Run Docker Container
+#      run: docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
