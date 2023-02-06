@@ -67,28 +67,15 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.REGION }}
 
+    - name: Connect to EC2 instance
+      run:
+        ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY_FILE }} ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+
+
     - name: Copy Docker Image to EC2 instance
       run: |
         aws s3 cp image.tar s3://${{ secrets.BUCKET_NAME }}/image.tar --debug
         aws s3 cp s3://${{ secrets.BUCKET_NAME }}/image.tar . --debug
-
-    - name: Connect to EC2 instance
-      uses: appleboy/ssh-action
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY_FILE }}
-        script: |
-          echo "Connected to EC2 instance"
-      
-
-    - name: Stop and remove existing containers
-      run: |
-          docker stop $(docker ps -a -q)
-          docker rm $(docker ps -a -q)
-
-    - name: Load Docker Image
-      run: docker load -i ${{ secrets.DOCKER_IMAGE }}
 
     - name: Run Docker Container
       run: docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
