@@ -36,28 +36,28 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
-    - name: Create a network for the DB
-      run: docker network create my-network
-
-    - name: Run MySQL container
-      env:
-        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      run: |
-        docker run -d -p 3307:3306 --name mysqldb -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
-        docker network connect my-network mysqldb 
-        docker logs mysqldb 
-
-    - name: Build with Maven
-      run: mvn clean install
-
-    - name: Build and Push Docker Image
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
-          docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
+#    - name: Create a network for the DB
+#      run: docker network create my-network
+#
+#    - name: Run MySQL container
+#      env:
+#        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+#      run: |
+#        docker run -d -p 3307:3306 --name mysqldb -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=demod mysql
+#        docker network connect my-network mysqldb
+#        docker logs mysqldb
+#
+#    - name: Build with Maven
+#      run: mvn clean install
+#
+#    - name: Build and Push Docker Image
+#      env:
+#        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#      run: |
+#          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+#          docker build -t sachi9/docker-springboot2:main-${{ env.SHA }} .
+#          docker push docker.io/sachi9/docker-springboot2:main-${{ env.GITHUB_SHA }}
           
 
 #    - name: Configure AWS CLI
@@ -72,7 +72,8 @@ jobs:
 #          docker run -d -p 9092:8081 ${{ secrets.DOCKER_IMAGE }}
 
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.7
+#      uses: appleboy/ssh-action@v0.1.7
+      uses: easingthemes/ssh-deploy@main
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
